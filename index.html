@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Miss Mei I Have A Question!</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #e63946;
+      --secondary-color: #ff9a9e;
+      --text-color: #2d3436;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      overflow-x: hidden;
+      position: fixed;
+      width: 100%;
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.97);
+      padding: 1.5rem;
+      height: 100vh;
+      width: 100%;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      margin: 1rem 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    h2 {
+      padding: 0 1rem;
+      text-align: center;
+    }
+    
+    .intro {
+      color: var(--text-color);
+      font-size: 1.1rem;
+      line-height: 1.5;
+      margin: 1rem 0;
+      padding: 0 1rem;
+      text-align: center;
+    }
+    
+    .memory-carousel {
+      position: relative;
+      margin: 1.5rem 0;
+      height: 400px;
+      overflow: visible;
+      padding-bottom: 50px;
+    }
+    
+    .memory-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .memory-slide.active {
+      opacity: 1;
+    }
+    
+    .memory-slide img {
+      width: 250px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      margin-bottom: 1rem;
+    }
+    
+    .memory-caption {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      max-width: 90%;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .carousel-nav {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      z-index: 10;
+    }
+    
+    .carousel-nav button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    .carousel-nav button:hover {
+      transform: scale(1.05);
+    }
+    
+    .response-section {
+      margin-top: 1.5rem;
+      padding: 1.5rem 1rem;
+      background: rgba(255, 192, 203, 0.1);
+      border-radius: 15px;
+    }
+    
+    .response-options {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .response-button {
+      background: none;
+      border: 2px solid var(--primary-color);
+      padding: 0.8rem 1.6rem;
+      border-radius: 25px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .response-button.yes {
+      background: var(--primary-color);
+      color: white;
+    }
+    
+    .message-area {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #ffd3d3;
+      border-radius: 10px;
+      resize: none;
+      min-height: 80px;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .music-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .music-prompt {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      text-align: center;
+    }
+    
+    .start-button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 25px;
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .start-button:hover {
+      transform: scale(1.05);
+    }
+    
+    .music-controls {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 0.5rem;
+      border-radius: 25px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+    
+    .music-controls button {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--primary-color);
+      padding: 0.5rem;
+    }
+    
+    .success-message {
+      display: none;
+      margin-top: 1.5rem;
+      font-size: 1.3rem;
+      color: var(--primary-color);
+      animation: fadeInUp 1s ease;
+      padding: 0 1rem;
+      text-align: center;
+    }
+    
+    .heart {
+    position: fixed;
+    font-size: 3rem;
+    user-select: none;
+    animation: floatUp 3s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+    }
+
+    @keyframes floatUp {
+    0% {
+        transform: translateY(80vh) translateX(-50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: translateY(-80vh) translateX(50%) scale(0.5);
+        opacity: 0;
+    }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-submitted {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    margin-top: 2rem;
+    }
+
+    .response-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    }
+
+    .send-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.6rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    align-self: center;
+    }
+
+    .send-button:hover {
+    transform: scale(1.05);
+    }
+
+    .error-message {
+    color: var(--primary-color);
+    text-align: center;
+    display: none;
+    margin-top: 1rem;
+    }
+
+    .response-options {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+    }
+
+    .decorative-button {
+    background: none;
+    border: 2px solid var(--primary-color);
+    padding: 0.8rem 1.6rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    user-select: none;
+    transition: all 0.3s ease;
+    }
+
+    .decorative-button.yes {
+    background: var(--primary-color);
+    color: white;
+    }
+
+    .form-submitted {
+    display: none;
+    text-align: center;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    margin-top: 2rem;
+    }
+
+    .response-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    }
+
+    .send-button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.6rem;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    align-self: center;
+    }
+
+    .send-button:hover {
+    transform: scale(1.05);
+    }
+
+    .error-message {
+    color: var(--primary-color);
+    text-align: center;
+    display: none;
+    margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="music-overlay" id="musicOverlay">
+    <div class="music-prompt">
+      <h2>💝 Are You Ready? 💝</h2>
+      <p>Tap to start....</p>
+      <button class="start-button" onclick="startExperience()">Start ✨</button>
+    </div>
+  </div>
+
+  <div class="container animate__animated animate__fadeIn">
+    <h1 class="animate__animated animate__heartBeat">Mei I have an important question for you!</h1>
+    
+    <p class="intro">
+      Mei, you are the most amazing person and I feel so grateful to have you in my life! I want to thank you and ask you a very important question... ❤️
+    </p>
+
+    <h1 class="animate__animated animate__heartBeat">Will you be my Valentine?</h1>
+    
+    <div class="memory-carousel">
+      <div class="memory-slide active">
+        <img src="images/100_0004.jpeg" alt="Kisses for my special girl!">
+        <p class="memory-caption">Kisses for my special girl!</p>
+      </div>
+      <div class="memory-slide">
+        <img src="images/FullSizeRender.jpeg" alt="How I see you">
+        <p class="memory-caption">Mum and Dad!</p>
+      </div>
+      <div class="memory-slide">
+        <img src="images/IMG_8903.jpeg" alt="Mum and Dad!">
+        <p class="memory-caption">How I see you</p>
+      </div>
+      <div class="memory-slide">
+        <img src="images/IMG_1452.jpeg" alt="flowes + girl">
+        <p class="memory-caption">Pretty girl with flowers!</p>
+      </div>
+      <div class="memory-slide">
+        <img src="images/IMG_1535.jpeg" alt="lego">
+        <p class="memory-caption">Pretty girl with lego flowers!</p>
+      </div>
+      <div class="memory-slide">
+        <img src="images/IMG_1008.jpeg" alt="lego">
+        <p class="memory-caption">Flowers that always remind me of you</p>
+      </div>
+      <div class="memory-slide">
+        <img src="images/IMG_1309.jpeg" alt="lego">
+        <p class="memory-caption">Big smile!</p>
+      </div>
+      <div class="carousel-nav">
+        <button onclick="previousSlide()">Previous</button>
+        <button onclick="nextSlide()">Next</button>
+      </div>
+    </div>
+    
+
+    <div class="response-section animate__animated animate__fadeInUp">
+        <h2>So, what do you say?</h2>
+        <div class="response-options">
+          <div class="decorative-button yes">Yes! ❤️</div>
+          <div class="decorative-button">or No :/</div>
+        </div>
+        
+        <form id="responseForm" class="response-form" action="https://formspree.io/f/movjwpyo" method="POST" target="_self">
+          <textarea 
+            class="message-area" 
+            name="message" 
+            placeholder="Leave me a message..."
+            required></textarea>
+          <button type="submit" class="send-button">Send Response 💌</button>
+        </form>
+        <div class="error-message">
+          Oops! Something went wrong. Please try again!
+        </div>
+      </div>
+      
+      <div class="form-submitted">
+        <h2>Response Sent! 💝</h2>
+        <p>Your valentine will receive your message soon!</p>
+      </div>
+
+  <div class="music-controls" style="display: none;">
+    <button onclick="toggleMusic()">🎵</button>
+  </div>
+
+  <script>
+    const audioElement = new Audio('audio/How Sweet It Is.mp3');
+    audioElement.loop = true;
+    let isPlaying = false;
+    
+    function startExperience() {
+    document.getElementById('musicOverlay').style.display = 'none';
+    document.querySelector('.music-controls').style.display = 'flex';
+    audioElement.play().catch(function(error) {
+        console.log("Audio play failed:", error);
+    });
+    isPlaying = true;
+    createHearts(); // Start continuous heart creation
+    }
+    
+    function toggleMusic() {
+      if (isPlaying) {
+        audioElement.pause();
+        isPlaying = false;
+      } else {
+        audioElement.play();
+        isPlaying = true;
+      }
+    }
+    
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.memory-slide');
+    
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      currentSlide = (index + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+    }
+    
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+    
+    function previousSlide() {
+      showSlide(currentSlide - 1);
+    }
+    
+    setInterval(nextSlide, 5000);
+    
+    function moveButton(button) {
+      const container = document.querySelector('.container');
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = button.getBoundingClientRect();
+      
+      const maxX = containerRect.width - buttonRect.width;
+      const maxY = containerRect.height - buttonRect.height;
+      
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+      
+      button.style.position = 'absolute';
+      button.style.left = `${randomX}px`;
+      button.style.top = `${randomY}px`;
+    }
+    
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // Vary animation speed
+        document.body.appendChild(heart);
+
+        // Remove heart after animation
+        setTimeout(() => heart.remove(), 7000);
+    }
+
+    function createHearts() {
+    setInterval(createHeart, 200); // Create a new heart every 300ms
+    }
+    
+    document.getElementById('responseForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    try {
+        const form = e.target;
+        const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+            'Accept': 'application/json'
+        }
+        });
+        
+        if (response.ok) {
+        // Hide the form section
+        document.querySelector('.response-section').style.display = 'none';
+        // Show the thank you message
+        document.querySelector('.form-submitted').style.display = 'block';
+        // Create celebration hearts
+        for (let i = 0; i < 30; i++) {
+            setTimeout(createHeart, i * 100);
+        }
+        } else {
+        throw new Error('Form submission failed');
+        }
+    } catch (error) {
+        document.querySelector('.error-message').style.display = 'block';
+        console.error('Error:', error);
+    }
+    });
+  </script>
+</body>
+</html>
