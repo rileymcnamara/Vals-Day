@@ -3,565 +3,1025 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Miss Mei I Have A Question!</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+  <title>our morning walk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --primary-color: #e63946;
-      --secondary-color: #ff9a9e;
-      --text-color: #2d3436;
+      --bg: #f8fcf8;
+      --leaf: #4a6654;
+      --leaf-soft: #7ea18c;
+      --ink: #2f4036;
+      --muted: #64786b;
+      --card: rgba(255, 255, 255, 0.88);
+      --border: rgba(85, 114, 95, 0.22);
+      --shadow: 0 18px 38px rgba(81, 106, 89, 0.12);
+      --radius: 22px;
     }
-    
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    
-    html, body {
-      height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-      overflow-x: hidden;
-      position: fixed;
-      width: 100%;
-    }
-    
-    .container {
-      background: rgba(255, 255, 255, 0.97);
-      padding: 1.5rem;
-      height: 100vh;
-      width: 100%;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-    
-    h1 {
-      color: var(--primary-color);
-      margin: 1rem 0;
-      font-size: 1.8rem;
-      font-weight: 700;
-      padding: 0 1rem;
-      text-align: center;
+
+    html,
+    body {
+      scroll-behavior: smooth;
     }
 
-    h2 {
-      padding: 0 1rem;
-      text-align: center;
-    }
-    
-    .intro {
-      color: var(--text-color);
-      font-size: 1.1rem;
-      line-height: 1.5;
-      margin: 1rem 0;
-      padding: 0 1rem;
-      text-align: center;
-    }
-    
-    .memory-carousel {
+    body {
+      font-family: "Nunito", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(42vw 28vw at 0% 0%, #fff4e5, transparent 72%),
+        radial-gradient(42vw 28vw at 100% 0%, #e5f0e7, transparent 72%),
+        var(--bg);
+      overflow-x: hidden;
       position: relative;
-      margin: 1.5rem 0;
-      height: 400px;
-      overflow: visible;
-      padding-bottom: 50px;
     }
-    
-    .memory-slide {
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Cormorant Garamond", serif;
+      font-weight: 600;
+      line-height: 1.04;
+    }
+
+    .label {
+      display: inline-block;
+      border-radius: 999px;
+      border: 1px solid rgba(74, 102, 84, 0.35);
+      color: var(--leaf);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.28rem 0.62rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .park-wallpaper {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .path-svg {
+      width: 100%;
       height: 100%;
-      opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+      display: block;
     }
-    
-    .memory-slide.active {
-      opacity: 1;
+
+    .path-track {
+      fill: none;
+      stroke: rgba(185, 150, 106, 0.35);
+      stroke-width: 16;
+      stroke-linecap: round;
     }
-    
-    .memory-slide img {
-      width: 250px;
-      height: 250px;
-      object-fit: cover;
-      border-radius: 15px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      margin-bottom: 1rem;
+
+    .path-track-core {
+      fill: none;
+      stroke: rgba(226, 194, 154, 0.52);
+      stroke-width: 9;
+      stroke-linecap: round;
     }
-    
-    .memory-caption {
-      font-size: 0.95rem;
-      color: var(--text-color);
-      max-width: 90%;
-      margin: 0 auto;
-      padding: 0 1rem;
-    }
-    
-    .carousel-nav {
+
+    .flora {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1rem;
-      z-index: 10;
+      z-index: 1;
+      filter: drop-shadow(0 6px 10px rgba(70, 93, 78, 0.15));
+      opacity: 0.98;
     }
-    
-    .carousel-nav button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 25px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: transform 0.2s;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    .flora.flower {
+      width: clamp(64px, 7.8vw, 122px);
     }
-    
-    .carousel-nav button:hover {
-      transform: scale(1.05);
+
+    .flora.grass {
+      width: clamp(96px, 11vw, 160px);
     }
-    
-    .response-section {
-      margin-top: 1.5rem;
-      padding: 1.5rem 1rem;
-      background: rgba(255, 192, 203, 0.1);
-      border-radius: 15px;
+
+    .f1 { left: 8%; top: 6%; }
+    .f2 { right: 8%; top: 12%; }
+    .f3 { left: 14%; top: 21%; }
+    .f4 { right: 12%; top: 27%; }
+    .f5 { left: 6%; top: 41%; }
+    .f6 { right: 7%; top: 49%; }
+    .f7 { left: 12%; top: 63%; }
+    .f8 { right: 10%; top: 70%; }
+    .f9 { left: 7%; top: 83%; }
+    .f10 { right: 9%; top: 89%; }
+    .f11 { left: 22%; top: 9%; }
+    .f12 { right: 22%; top: 16%; }
+    .f13 { left: 26%; top: 24%; }
+    .f14 { right: 24%; top: 31%; }
+    .f15 { left: 18%; top: 36%; }
+    .f16 { right: 19%; top: 44%; }
+    .f17 { left: 24%; top: 52%; }
+    .f18 { right: 23%; top: 58%; }
+    .f19 { left: 20%; top: 67%; }
+    .f20 { right: 20%; top: 75%; }
+    .f21 { left: 25%; top: 86%; }
+    .f22 { right: 24%; top: 94%; }
+    .f23 { left: 30%; top: 5%; }
+    .f24 { right: 30%; top: 11%; }
+    .f25 { left: 34%; top: 18%; }
+    .f26 { right: 34%; top: 23%; }
+    .f27 { left: 30%; top: 29%; }
+    .f28 { right: 30%; top: 34%; }
+    .f29 { left: 33%; top: 40%; }
+    .f30 { right: 33%; top: 46%; }
+    .f31 { left: 31%; top: 53%; }
+    .f32 { right: 31%; top: 59%; }
+    .f33 { left: 35%; top: 65%; }
+    .f34 { right: 35%; top: 71%; }
+    .f35 { left: 32%; top: 78%; }
+    .f36 { right: 32%; top: 84%; }
+    .f37 { left: 36%; top: 90%; }
+    .f38 { right: 36%; top: 96%; }
+    .f39 { left: 16%; top: 55%; }
+    .f40 { right: 15%; top: 61%; }
+    .f41 { left: 28%; top: 73%; }
+    .f42 { right: 27%; top: 37%; }
+
+    .path-rail {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      bottom: 1rem;
+      width: 58px;
+      z-index: 20;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      padding: 0.8rem 0;
+      gap: 0.48rem;
     }
-    
-    .response-options {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
+
+    .path-line {
+      width: 4px;
+      height: calc(100% - 110px);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #dce9df, #e9d8d8);
+      position: absolute;
+      top: 56px;
+      left: 50%;
+      transform: translateX(-50%);
     }
-    
-    .response-button {
-      background: none;
-      border: 2px solid var(--primary-color);
-      padding: 0.8rem 1.6rem;
-      border-radius: 25px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
+
+    .path-stop {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #d8e7dc;
+      border: 1px solid rgba(74, 102, 84, 0.28);
+      z-index: 1;
+      transition: transform 200ms ease, background 200ms ease;
+    }
+
+    .path-stop.active {
+      background: var(--leaf-soft);
+      transform: scale(1.25);
+    }
+
+    .walker-dot {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #fff;
+      border: 1px solid rgba(74, 102, 84, 0.35);
+      display: grid;
+      place-items: center;
+      font-size: 0.95rem;
+      position: absolute;
+      top: 46px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: top 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 8px 14px rgba(67, 88, 74, 0.15);
+    }
+
+    .walk-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+      display: none;
+      place-items: center;
+      background: rgba(250, 255, 250, 0.66);
+      backdrop-filter: blur(2px);
+    }
+
+    .walk-overlay.active {
+      display: grid;
+      animation: fadeInOut 760ms ease;
+    }
+
+    .footprints {
+      width: min(420px, 90vw);
+      height: 130px;
       position: relative;
       overflow: hidden;
     }
-    
-    .response-button.yes {
-      background: var(--primary-color);
-      color: white;
+
+    .foot {
+      position: absolute;
+      font-size: 1.25rem;
+      color: rgba(78, 108, 89, 0.58);
+      animation: step 760ms linear forwards;
     }
-    
-    .message-area {
-      width: 100%;
-      padding: 0.8rem;
-      border: 2px solid #ffd3d3;
-      border-radius: 10px;
-      resize: none;
-      min-height: 80px;
-      font-size: 1rem;
-      margin-top: 1rem;
+
+    @keyframes step {
+      from { transform: translateX(-120px); opacity: 0; }
+      15% { opacity: 1; }
+      to { transform: translateX(460px); opacity: 0; }
     }
-    
-    .music-overlay {
-      position: fixed;
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .section {
+      min-height: 138vh;
+      padding: 3.2rem 5.4rem 3.6rem 5.4rem;
+      display: grid;
+      place-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-inner {
+      width: min(920px, 100%);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .hero {
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.6rem, 8.5vw, 4.8rem);
+      color: var(--leaf);
+      margin-top: 0.35rem;
+    }
+
+    .hero p {
+      max-width: 56ch;
+      margin: 0.35rem auto 0;
+      line-height: 1.7;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.12rem);
+    }
+
+    .gate {
+      margin: 0.8rem auto 0;
+      width: min(520px, 100%);
+      aspect-ratio: 8 / 3;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 1px solid rgba(85, 114, 95, 0.25);
+      position: relative;
+      background: linear-gradient(180deg, #edf8f0, #e6f0e8 55%, #efe4d3 56%, #eadcc9);
+    }
+
+    .gate-door {
+      position: absolute;
       top: 0;
-      left: 0;
-      width: 100%;
+      width: 50%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.95);
+      background: repeating-linear-gradient(90deg, #9eb59f 0 14px, #95ac96 14px 28px);
+      transition: transform 1.1s ease;
+      transform-origin: left center;
+      border-right: 1px solid rgba(73, 98, 82, 0.2);
+    }
+
+    .gate-door.right {
+      right: 0;
+      left: auto;
+      transform-origin: right center;
+      border-right: none;
+      border-left: 1px solid rgba(73, 98, 82, 0.2);
+    }
+
+    .gate.open .left { transform: rotateY(-108deg); }
+    .gate.open .right { transform: rotateY(108deg); }
+
+    .memory {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .memory .section-inner,
+    .finale .section-inner {
+      justify-items: center;
+      text-align: center;
+    }
+
+    .memory img {
+      width: 100%;
+      max-height: 62vh;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid rgba(85, 114, 95, 0.3);
+      box-shadow: 0 10px 20px rgba(75, 97, 82, 0.12);
+      background: #fff;
+    }
+
+    .memory h2 {
+      font-size: clamp(2rem, 6.8vw, 3.1rem);
+      color: #3f5749;
+    }
+
+    .memory p {
+      color: var(--muted);
+      line-height: 1.68;
+      font-size: 1rem;
+      max-width: 56ch;
+    }
+
+    .walk-btn {
+      justify-self: center;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #87a88f, #9fb8a6);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      padding: 0.74rem 1rem;
+      cursor: pointer;
+      box-shadow: 0 10px 18px rgba(88, 115, 97, 0.22);
+      transition: transform 180ms ease;
+    }
+
+    .walk-btn:hover { transform: translateY(-1px); }
+    .walk-btn:active { transform: translateY(1px); }
+
+    .finale {
+      text-align: center;
+    }
+
+    .finale h2 {
+      font-size: clamp(2.3rem, 7.6vw, 3.9rem);
+      color: var(--leaf);
+      margin-top: 0.35rem;
+    }
+
+    .finale p {
+      max-width: 58ch;
+      margin: 0.2rem auto 0;
+      color: var(--muted);
+      line-height: 1.72;
+    }
+
+    .choice-zone {
+      margin-top: 0.8rem;
+      min-height: 220px;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .choice-row {
       display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      z-index: 1000;
+      position: static;
+      width: 100%;
+      min-height: 52px;
     }
-    
-    .music-prompt {
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      text-align: center;
-    }
-    
-    .start-button {
-      background: var(--primary-color);
-      color: white;
+
+    .choice {
       border: none;
-      padding: 1rem 2rem;
-      border-radius: 25px;
-      font-size: 1.2rem;
-      margin-top: 1rem;
+      border-radius: 999px;
+      padding: 0.74rem 1.02rem;
+      font: inherit;
+      font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s;
+      min-width: 146px;
     }
-    
-    .start-button:hover {
-      transform: scale(1.05);
+
+    #yesBtn {
+      color: #fff;
+      background: linear-gradient(120deg, #8bae97, #a2bcaa);
+      position: relative;
+      z-index: 3;
     }
-    
-    .music-controls {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
+
+    #noBtn {
+      color: var(--leaf);
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(74, 102, 84, 0.35);
+      position: relative;
+      z-index: 2;
+    }
+
+    .accepted {
+      color: var(--leaf);
+      font-weight: 700;
+      margin-top: 0.6rem;
+    }
+
+    .form {
+      margin: 0.9rem auto 0;
+      width: min(720px, 100%);
+      text-align: center;
+      display: grid;
+      gap: 0.52rem;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 108px;
+      resize: vertical;
+      border-radius: 12px;
+      border: 1px solid rgba(74, 102, 84, 0.37);
       background: rgba(255, 255, 255, 0.9);
-      padding: 0.5rem;
-      border-radius: 25px;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      z-index: 100;
+      color: var(--ink);
+      font: inherit;
+      padding: 0.8rem;
     }
-    
-    .music-controls button {
-      background: none;
+
+    .send {
+      justify-self: center;
       border: none;
-      font-size: 1.5rem;
+      border-radius: 999px;
+      padding: 0.72rem 1rem;
+      color: #fff;
+      background: linear-gradient(120deg, #d5a0b2, #e6bbca);
+      font: inherit;
+      font-weight: 700;
       cursor: pointer;
-      color: var(--primary-color);
-      padding: 0.5rem;
-    }
-    
-    .success-message {
-      display: none;
-      margin-top: 1.5rem;
-      font-size: 1.3rem;
-      color: var(--primary-color);
-      animation: fadeInUp 1s ease;
-      padding: 0 1rem;
-      text-align: center;
-    }
-    
-    .heart {
-    position: fixed;
-    font-size: 3rem;
-    user-select: none;
-    animation: floatUp 3s linear infinite;
-    pointer-events: none;
-    z-index: 9999;
     }
 
-    @keyframes floatUp {
-    0% {
-        transform: translateY(80vh) translateX(-50%) scale(1);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(-80vh) translateX(50%) scale(0.5);
-        opacity: 0;
-    }
+    .feedback {
+      min-height: 1.2rem;
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: #778a7d;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
+    .music {
+      position: fixed;
+      right: 1rem;
+      top: 1rem;
+      z-index: 22;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.86);
+      border-radius: 999px;
+      padding: 0.58rem 0.8rem;
+      font: inherit;
+      font-weight: 700;
+      color: var(--leaf);
+      cursor: pointer;
+    }
+
+    @media (max-width: 740px) {
+      .path-rail {
+        left: 0.45rem;
+        width: 48px;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+
+      .section {
+        min-height: 124vh;
+        padding-left: 3.9rem;
+        padding-right: 3.9rem;
+        padding-top: 2rem;
+        padding-bottom: 2.4rem;
       }
-    }
 
-    .form-submitted {
-    display: none;
-    text-align: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    margin-top: 2rem;
-    }
+      .music {
+        right: 0.6rem;
+        top: 0.6rem;
+      }
 
-    .response-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
-    }
+      .flora.grass {
+        width: clamp(74px, 18vw, 120px);
+      }
 
-    .send-button {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.8rem 1.6rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-    align-self: center;
-    }
+      .flora.flower {
+        width: clamp(52px, 11vw, 92px);
+      }
 
-    .send-button:hover {
-    transform: scale(1.05);
-    }
-
-    .error-message {
-    color: var(--primary-color);
-    text-align: center;
-    display: none;
-    margin-top: 1rem;
-    }
-
-    .response-options {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-    }
-
-    .decorative-button {
-    background: none;
-    border: 2px solid var(--primary-color);
-    padding: 0.8rem 1.6rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    user-select: none;
-    transition: all 0.3s ease;
-    }
-
-    .decorative-button.yes {
-    background: var(--primary-color);
-    color: white;
-    }
-
-    .form-submitted {
-    display: none;
-    text-align: center;
-    padding: 2rem;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    margin-top: 2rem;
-    }
-
-    .response-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    margin-top: 1rem;
-    }
-
-    .send-button {
-    background: var(--primary-color);
-    color: white;
-    border: none;
-    padding: 0.8rem 1.6rem;
-    border-radius: 25px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition: transform 0.2s;
-    align-self: center;
-    }
-
-    .send-button:hover {
-    transform: scale(1.05);
-    }
-
-    .error-message {
-    color: var(--primary-color);
-    text-align: center;
-    display: none;
-    margin-top: 1rem;
+      .choice-zone {
+        min-height: 180px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="music-overlay" id="musicOverlay">
-    <div class="music-prompt">
-      <h2>💝 Are You Ready? 💝</h2>
-      <p>Tap to start....</p>
-      <button class="start-button" onclick="startExperience()">Start ✨</button>
-    </div>
+  <div class="park-wallpaper" id="parkWallpaper" aria-hidden="true">
+    <svg class="path-svg" viewBox="0 0 100 1000" preserveAspectRatio="none">
+      <path class="path-track" d="M62 0 C30 90 78 180 45 280 C20 360 76 450 50 560 C26 660 74 760 42 860 C18 930 64 980 52 1000" />
+      <path class="path-track-core" d="M62 0 C30 90 78 180 45 280 C20 360 76 450 50 560 C26 660 74 760 42 860 C18 930 64 980 52 1000" />
+    </svg>
+    <img class="flora flower f1" src="images/flower3.png" alt="" />
+    <img class="flora grass f2" src="images/grass1.png" alt="" />
+    <img class="flora grass f3" src="images/grass2.png" alt="" />
+    <img class="flora flower f4" src="images/flower2.png" alt="" />
+    <img class="flora flower f5" src="images/flower4.png" alt="" />
+    <img class="flora grass f6" src="images/grass1.png" alt="" />
+    <img class="flora grass f7" src="images/grass2.png" alt="" />
+    <img class="flora flower f8" src="images/flower2.png" alt="" />
+    <img class="flora flower f9" src="images/flower5.webp" alt="" />
+    <img class="flora grass f10" src="images/grass2.png" alt="" />
+    <img class="flora flower f11" src="images/flower2.png" alt="" />
+    <img class="flora flower f12" src="images/flower3.png" alt="" />
+    <img class="flora flower f13" src="images/flower2.png" alt="" />
+    <img class="flora flower f14" src="images/flower4.png" alt="" />
+    <img class="flora flower f15" src="images/flower2.png" alt="" />
+    <img class="flora flower f16" src="images/flower5.webp" alt="" />
+    <img class="flora flower f17" src="images/flower2.png" alt="" />
+    <img class="flora flower f18" src="images/flower3.png" alt="" />
+    <img class="flora flower f19" src="images/flower2.png" alt="" />
+    <img class="flora flower f20" src="images/flower4.png" alt="" />
+    <img class="flora flower f21" src="images/flower2.png" alt="" />
+    <img class="flora flower f22" src="images/flower5.webp" alt="" />
+    <img class="flora flower f23" src="images/flower2.png" alt="" />
+    <img class="flora flower f24" src="images/flower3.png" alt="" />
+    <img class="flora flower f25" src="images/flower4.png" alt="" />
+    <img class="flora flower f26" src="images/flower5.webp" alt="" />
+    <img class="flora flower f27" src="images/flower2.png" alt="" />
+    <img class="flora flower f28" src="images/flower3.png" alt="" />
+    <img class="flora flower f29" src="images/flower4.png" alt="" />
+    <img class="flora flower f30" src="images/flower5.webp" alt="" />
+    <img class="flora flower f31" src="images/flower2.png" alt="" />
+    <img class="flora flower f32" src="images/flower3.png" alt="" />
+    <img class="flora flower f33" src="images/flower4.png" alt="" />
+    <img class="flora flower f34" src="images/flower5.webp" alt="" />
+    <img class="flora flower f35" src="images/flower2.png" alt="" />
+    <img class="flora flower f36" src="images/flower3.png" alt="" />
+    <img class="flora flower f37" src="images/flower4.png" alt="" />
+    <img class="flora flower f38" src="images/flower5.webp" alt="" />
+    <img class="flora flower f39" src="images/flower2.png" alt="" />
+    <img class="flora flower f40" src="images/flower3.png" alt="" />
+    <img class="flora flower f41" src="images/flower4.png" alt="" />
+    <img class="flora flower f42" src="images/flower5.webp" alt="" />
   </div>
 
-  <div class="container animate__animated animate__fadeIn">
-    <h1 class="animate__animated animate__heartBeat">Mei I have an important question for you!</h1>
-    
-    <p class="intro">
-      Mei, you are the most amazing person and I feel so grateful to have you in my life! I want to thank you and ask you a very important question... ❤️
-    </p>
+  <aside class="path-rail" id="pathRail" aria-hidden="true">
+    <span class="path-line"></span>
+    <span class="walker-dot" id="walkerDot">🚶</span>
+  </aside>
 
-    <h1 class="animate__animated animate__heartBeat">Will you be my Valentine?</h1>
-    
-    <div class="memory-carousel">
-      <div class="memory-slide active">
-        <img src="images/100_0004.jpeg" alt="Kisses for my special girl!">
-        <p class="memory-caption">Kisses for my special girl!</p>
-      </div>
-      <div class="memory-slide">
-        <img src="images/FullSizeRender.jpeg" alt="How I see you">
-        <p class="memory-caption">Mum and Dad!</p>
-      </div>
-      <div class="memory-slide">
-        <img src="images/IMG_8903.jpeg" alt="Mum and Dad!">
-        <p class="memory-caption">How I see you</p>
-      </div>
-      <div class="memory-slide">
-        <img src="images/IMG_1452.jpeg" alt="flowes + girl">
-        <p class="memory-caption">Pretty girl with flowers!</p>
-      </div>
-      <div class="memory-slide">
-        <img src="images/IMG_1535.jpeg" alt="lego">
-        <p class="memory-caption">Pretty girl with lego flowers!</p>
-      </div>
-      <div class="memory-slide">
-        <img src="images/IMG_1008.jpeg" alt="lego">
-        <p class="memory-caption">Flowers that always remind me of you</p>
-      </div>
-      <div class="memory-slide">
-        <img src="images/IMG_1309.jpeg" alt="lego">
-        <p class="memory-caption">Big smile!</p>
-      </div>
-      <div class="carousel-nav">
-        <button onclick="previousSlide()">Previous</button>
-        <button onclick="nextSlide()">Next</button>
-      </div>
-    </div>
-    
+  <button class="music" id="musicToggle" type="button">Play Music</button>
 
-    <div class="response-section animate__animated animate__fadeInUp">
-        <h2>So, what do you say?</h2>
-        <div class="response-options">
-          <div class="decorative-button yes">Yes! ❤️</div>
-          <div class="decorative-button">or No :/</div>
-        </div>
-        
-        <form id="responseForm" class="response-form" action="https://formspree.io/f/movjwpyo" method="POST" target="_self">
-          <textarea 
-            class="message-area" 
-            name="message" 
-            placeholder="Leave me a message..."
-            required></textarea>
-          <button type="submit" class="send-button">Send Response 💌</button>
-        </form>
-        <div class="error-message">
-          Oops! Something went wrong. Please try again!
-        </div>
-      </div>
-      
-      <div class="form-submitted">
-        <h2>Response Sent! 💝</h2>
-        <p>Your valentine will receive your message soon!</p>
-      </div>
-
-  <div class="music-controls" style="display: none;">
-    <button onclick="toggleMusic()">🎵</button>
+  <div class="walk-overlay" id="walkOverlay" aria-hidden="true">
+    <div class="footprints" id="footprints"></div>
   </div>
+
+  <section class="section" id="gate" data-rail>
+    <div class="section-inner hero">
+      <span class="label">Valentine Park</span>
+      <p>
+        Lets go for our morning walk!
+      </p>
+      <div class="gate" id="gateVisual" aria-hidden="true">
+        <div class="gate-door left"></div>
+        <div class="gate-door right"></div>
+      </div>
+      <button class="walk-btn" data-next="stop-1" id="enterBtn">Open The Gates</button>
+    </div>
+  </section>
+
+  <section class="section memory" id="stop-1" data-stop="1" data-rail>
+    <div class="section-inner">
+      <span class="label">Stop 1</span>
+      <img src="images/IMG_0020.jpeg" alt="A sweet memory together" />
+      <h3>Our morning walks are one of my favourite things we do together (maybe with our own pup one day!)</h3>
+      <button class="walk-btn" data-next="stop-2">Continue Walking</button>
+    </div>
+  </section>
+
+  <section class="section memory" id="stop-2" data-stop="2" data-rail>
+    <div class="section-inner">
+      <span class="label">Stop 2</span>
+      <img src="images/IMG_0025.jpeg" alt="Mei with flowers" />
+      <h3>Quick kiss bc I love you</h3>
+      <button class="walk-btn" data-next="stop-3">Continue Walking</button>
+    </div>
+  </section>
+
+  <section class="section memory" id="stop-3" data-stop="3" data-rail>
+    <div class="section-inner">
+      <span class="label">Stop 3</span>
+      <img src="images/IMG_2434.jpeg" alt="A cozy memory" />
+      <h3>Spotted a mang !</h3>
+      <button class="walk-btn" data-next="stop-4">Continue Walking</button>
+    </div>
+  </section>
+
+  <section class="section memory" id="stop-4" data-stop="4" data-rail>
+    <div class="section-inner">
+      <span class="label">Stop 4</span>
+      <img src="images/IMG_0345.jpeg" alt="Beautiful smile" />
+      <h3>You're truly the prettiest girl in the whole world</h3>
+      <button class="walk-btn" data-next="stop-5">Continue Walking</button>
+    </div>
+  </section>
+
+  <section class="section memory" id="stop-5" data-stop="5" data-rail>
+    <div class="section-inner">
+      <span class="label">Stop 5</span>
+      <img src="images/IMG_2355.jpeg" alt="A favorite photo of Mei" />
+      <h3>All the trees remind me of you</h3>
+      <button class="walk-btn" data-next="final-stop">Continue Walking</button>
+    </div>
+  </section>
+
+  <section class="section finale" id="final-stop" data-stop="6" data-rail>
+    <div class="section-inner">
+      <span class="label">Stop 6</span>
+      <img src="images/IMG_0237.jpeg" alt="A forever memory" style="width:100%;max-height:54vh;object-fit:cover;border-radius:16px;border:1px solid rgba(85,114,95,0.3);" />
+      <h2>Will you be my Valentine?</h2>  
+
+      <div class="choice-zone" id="choiceZone">
+        <div class="choice-row" id="choiceRow">
+          <button class="choice" id="yesBtn" type="button">Yes</button>
+          <button class="choice" id="noBtn" type="button">No</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <script>
-    const audioElement = new Audio('audio/How Sweet It Is.mp3');
-    audioElement.loop = true;
+    const audio = new Audio("audio/Better Together.mp3");
+    audio.loop = true;
+
+    const gateVisual = document.getElementById("gateVisual");
+    const walkOverlay = document.getElementById("walkOverlay");
+    const footprints = document.getElementById("footprints");
+    const walkerDot = document.getElementById("walkerDot");
+    const musicToggle = document.getElementById("musicToggle");
+    const enterBtn = document.getElementById("enterBtn");
+    const parkWallpaper = document.getElementById("parkWallpaper");
+
+    const buttons = Array.from(document.querySelectorAll(".walk-btn[data-next]:not(#enterBtn)"));
+    const railSections = Array.from(document.querySelectorAll("[data-rail]"));
+    const sectionIds = railSections.map((node) => node.id);
+
+    const responseForm = document.getElementById("responseForm");
+    const feedback = document.getElementById("feedback");
+    const choiceZone = document.getElementById("choiceZone");
+    const choiceRow = document.getElementById("choiceRow");
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn = document.getElementById("noBtn");
+
     let isPlaying = false;
-    
-    function startExperience() {
-    document.getElementById('musicOverlay').style.display = 'none';
-    document.querySelector('.music-controls').style.display = 'flex';
-    audioElement.play().catch(function(error) {
-        console.log("Audio play failed:", error);
-    });
-    isPlaying = true;
-    createHearts(); // Start continuous heart creation
+    let noMoves = 0;
+    let isWalkingTransition = false;
+    const pointerInChoice = { x: null, y: null };
+
+    const pathRail = document.getElementById("pathRail");
+    const lineTop = 56;
+    const lineHeight = () => pathRail.getBoundingClientRect().height - 110;
+
+    function resizeWallpaper() {
+      parkWallpaper.style.height = `${Math.max(document.body.scrollHeight, document.documentElement.scrollHeight)}px`;
     }
-    
-    function toggleMusic() {
-      if (isPlaying) {
-        audioElement.pause();
-        isPlaying = false;
-      } else {
-        audioElement.play();
-        isPlaying = true;
+
+    function populateExtraFlowers() {
+      const old = parkWallpaper.querySelectorAll(".auto-flower");
+      old.forEach((node) => node.remove());
+
+      const flowerAssets = [
+        "images/flower2.png",
+        "images/flower3.png",
+        "images/flower4.png",
+        "images/flower5.webp"
+      ];
+
+      const count = window.innerWidth < 740 ? 56 : 92;
+      for (let i = 0; i < count; i++) {
+        const img = document.createElement("img");
+        const sideLeft = Math.random() < 0.5;
+        const x = sideLeft ? 1 + Math.random() * 18 : 81 + Math.random() * 18;
+        const y = 2 + Math.random() * 96;
+        const scale = 0.75 + Math.random() * 0.8;
+        const rotate = -15 + Math.random() * 30;
+
+        img.className = "flora flower auto-flower";
+        img.src = flowerAssets[Math.floor(Math.random() * flowerAssets.length)];
+        img.alt = "";
+        img.style.left = `${x}%`;
+        img.style.top = `${y}%`;
+        img.style.transform = `rotate(${rotate}deg) scale(${scale})`;
+        img.style.opacity = `${0.82 + Math.random() * 0.18}`;
+        parkWallpaper.appendChild(img);
       }
     }
-    
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.memory-slide');
-    
-    function showSlide(index) {
-      slides.forEach(slide => slide.classList.remove('active'));
-      currentSlide = (index + slides.length) % slides.length;
-      slides[currentSlide].classList.add('active');
-    }
-    
-    function nextSlide() {
-      showSlide(currentSlide + 1);
-    }
-    
-    function previousSlide() {
-      showSlide(currentSlide - 1);
-    }
-    
-    setInterval(nextSlide, 5000);
-    
-    function moveButton(button) {
-      const container = document.querySelector('.container');
-      const containerRect = container.getBoundingClientRect();
-      const buttonRect = button.getBoundingClientRect();
-      
-      const maxX = containerRect.width - buttonRect.width;
-      const maxY = containerRect.height - buttonRect.height;
-      
-      const randomX = Math.random() * maxX;
-      const randomY = Math.random() * maxY;
-      
-      button.style.position = 'absolute';
-      button.style.left = `${randomX}px`;
-      button.style.top = `${randomY}px`;
-    }
-    
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.classList.add('heart');
-        heart.innerHTML = '❤️';
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.animationDuration = Math.random() * 3 + 2 + 's'; // Vary animation speed
-        document.body.appendChild(heart);
 
-        // Remove heart after animation
-        setTimeout(() => heart.remove(), 7000);
+    function updateWalker(index) {
+      const total = sectionIds.length - 1;
+      const ratio = total === 0 ? 0 : index / total;
+      const y = lineTop + ratio * lineHeight();
+      walkerDot.style.top = `${y}px`;
+
+      const oldDots = document.querySelectorAll(".path-stop");
+      oldDots.forEach((dot, i) => {
+        dot.classList.toggle("active", i === index);
+      });
     }
 
-    function createHearts() {
-    setInterval(createHeart, 200); // Create a new heart every 300ms
+    function buildPathStops() {
+      for (let i = 0; i < sectionIds.length; i++) {
+        const dot = document.createElement("span");
+        dot.className = "path-stop";
+        pathRail.appendChild(dot);
+      }
+      updateWalker(0);
     }
-    
-    document.getElementById('responseForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    try {
-        const form = e.target;
-        const response = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: {
-            'Accept': 'application/json'
+
+    function playWalkFx() {
+      walkOverlay.classList.add("active");
+      footprints.innerHTML = "";
+
+      for (let i = 0; i < 7; i++) {
+        const foot = document.createElement("span");
+        foot.className = "foot";
+        foot.textContent = i % 2 === 0 ? "👣" : "❀";
+        foot.style.top = `${18 + (i % 3) * 32}px`;
+        foot.style.animationDelay = `${i * 70}ms`;
+        footprints.appendChild(foot);
+      }
+
+      setTimeout(() => {
+        walkOverlay.classList.remove("active");
+      }, 760);
+    }
+
+    function updateMusicToggleLabel() {
+      musicToggle.textContent = isPlaying ? "Pause Music" : "Play Music";
+    }
+
+    async function tryStartMusic() {
+      if (isPlaying) return true;
+      try {
+        await audio.play();
+        isPlaying = true;
+        updateMusicToggleLabel();
+        return true;
+      } catch {
+        isPlaying = false;
+        updateMusicToggleLabel();
+        return false;
+      }
+    }
+
+    function slowScrollTo(targetY, durationMs) {
+      const startY = window.scrollY;
+      const delta = targetY - startY;
+      const startTime = performance.now();
+
+      return new Promise((resolve) => {
+        function tick(now) {
+          const elapsed = now - startTime;
+          const t = Math.min(elapsed / durationMs, 1);
+          const eased = 0.5 - Math.cos(Math.PI * t) / 2;
+          window.scrollTo(0, startY + delta * eased);
+
+          if (t < 1) {
+            requestAnimationFrame(tick);
+          } else {
+            resolve();
+          }
         }
+
+        requestAnimationFrame(tick);
+      });
+    }
+
+    async function walkTo(id) {
+      if (isWalkingTransition) return;
+      const target = document.getElementById(id);
+      if (!target) return;
+
+      isWalkingTransition = true;
+      await new Promise((resolve) => setTimeout(resolve, 280));
+
+      const focus = target.querySelector(".section-inner") || target;
+      const focusRect = focus.getBoundingClientRect();
+      const focusTop = focusRect.top + window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const centeredY = focusTop - (window.innerHeight - focusRect.height) / 2;
+      const targetY = Math.min(maxScroll, Math.max(0, centeredY));
+      const distance = Math.abs(targetY - window.scrollY);
+      const durationMs = Math.min(14000, Math.max(6000, distance * 5.5));
+      await slowScrollTo(targetY, durationMs);
+
+      isWalkingTransition = false;
+    }
+
+    enterBtn.addEventListener("click", async () => {
+      if (!isPlaying) await tryStartMusic();
+      gateVisual.classList.add("open");
+      setTimeout(() => walkTo("stop-1"), 760);
+    });
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const id = button.getAttribute("data-next");
+        if (id) walkTo(id);
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.id;
+        const index = sectionIds.indexOf(id);
+        if (index >= 0) updateWalker(index);
+      });
+    }, { threshold: 0.6 });
+
+    sectionIds.forEach((id) => {
+      const node = document.getElementById(id);
+      if (node) observer.observe(node);
+    });
+
+    musicToggle.addEventListener("click", async () => {
+      if (isPlaying) {
+        audio.pause();
+        isPlaying = false;
+        updateMusicToggleLabel();
+      } else {
+        const started = await tryStartMusic();
+        if (!started) musicToggle.textContent = "Try Again";
+      }
+    });
+
+
+    function moveNoButton(event) {
+      noMoves += 1;
+      if (noMoves > 0) noBtn.textContent = "No";
+      if (noMoves > 3) noBtn.textContent = "No";
+
+      noBtn.style.position = "absolute";
+      noBtn.style.zIndex = "4";
+      const rect = choiceZone.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const yesRectRaw = yesBtn.getBoundingClientRect();
+      const yesRect = {
+        left: yesRectRaw.left - rect.left,
+        right: yesRectRaw.right - rect.left,
+        top: yesRectRaw.top - rect.top,
+        bottom: yesRectRaw.bottom - rect.top
+      };
+      const padding = 6;
+      const maxX = Math.max(rect.width - btnRect.width - padding * 2, 10);
+      const maxY = Math.max(rect.height - btnRect.height - padding * 2, 10);
+
+      let pointerX = pointerInChoice.x ?? rect.width / 2;
+      let pointerY = pointerInChoice.y ?? rect.height / 2;
+
+      if (event) {
+        if (event.touches && event.touches[0]) {
+          pointerX = event.touches[0].clientX - rect.left;
+          pointerY = event.touches[0].clientY - rect.top;
+        } else if (typeof event.clientX === "number" && typeof event.clientY === "number") {
+          pointerX = event.clientX - rect.left;
+          pointerY = event.clientY - rect.top;
+        }
+      }
+
+      let bestX = 0;
+      let bestY = 0;
+      let bestDistance = -1;
+      const avoidPadding = 28;
+
+      function overlapsYes(candidateX, candidateY) {
+        const left = candidateX - avoidPadding;
+        const right = candidateX + btnRect.width + avoidPadding;
+        const top = candidateY - avoidPadding;
+        const bottom = candidateY + btnRect.height + avoidPadding;
+
+        return !(
+          right < yesRect.left ||
+          left > yesRect.right ||
+          bottom < yesRect.top ||
+          top > yesRect.bottom
+        );
+      }
+
+      for (let i = 0; i < 48; i++) {
+        const candidateX = padding + Math.random() * maxX;
+        const candidateY = padding + Math.random() * maxY;
+        if (overlapsYes(candidateX, candidateY)) {
+          continue;
+        }
+        const candidateCenterX = candidateX + btnRect.width / 2;
+        const candidateCenterY = candidateY + btnRect.height / 2;
+        const distance = Math.hypot(candidateCenterX - pointerX, candidateCenterY - pointerY);
+
+        if (distance > bestDistance) {
+          bestDistance = distance;
+          bestX = candidateX;
+          bestY = candidateY;
+        }
+      }
+
+      // If random picks are still too close, force a corner opposite the cursor.
+      if (bestDistance < 140) {
+        const corners = [
+          { x: padding, y: padding },
+          { x: padding + maxX, y: padding },
+          { x: padding, y: padding + maxY },
+          { x: padding + maxX, y: padding + maxY }
+        ];
+        let cornerBest = corners[0];
+        let cornerDist = -1;
+        for (const corner of corners) {
+          if (overlapsYes(corner.x, corner.y)) {
+            continue;
+          }
+          const cx = corner.x + btnRect.width / 2;
+          const cy = corner.y + btnRect.height / 2;
+          const d = Math.hypot(cx - pointerX, cy - pointerY);
+          if (d > cornerDist) {
+            cornerDist = d;
+            cornerBest = corner;
+          }
+        }
+        bestX = cornerBest.x;
+        bestY = cornerBest.y;
+      }
+
+      noBtn.style.left = `${bestX}px`;
+      noBtn.style.top = `${bestY}px`;
+    }
+
+    choiceZone.addEventListener("mousemove", (event) => {
+      const rect = choiceZone.getBoundingClientRect();
+      pointerInChoice.x = event.clientX - rect.left;
+      pointerInChoice.y = event.clientY - rect.top;
+    });
+
+    noBtn.addEventListener("mouseenter", moveNoButton);
+    noBtn.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      moveNoButton(event);
+    }, { passive: false });
+
+    yesBtn.addEventListener("click", () => {
+      choiceRow.style.display = "none";
+      const ok = document.createElement("p");
+      ok.className = "accepted";
+      ok.textContent = "Right choice! I love you so much";
+      choiceZone.appendChild(ok);
+    });
+
+    responseForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      feedback.textContent = "Sending...";
+      feedback.style.color = "#76897b";
+
+      try {
+        const response = await fetch(responseForm.action, {
+          method: "POST",
+          body: new FormData(responseForm),
+          headers: { "Accept": "application/json" }
         });
-        
-        if (response.ok) {
-        // Hide the form section
-        document.querySelector('.response-section').style.display = 'none';
-        // Show the thank you message
-        document.querySelector('.form-submitted').style.display = 'block';
-        // Create celebration hearts
-        for (let i = 0; i < 30; i++) {
-            setTimeout(createHeart, i * 100);
-        }
-        } else {
-        throw new Error('Form submission failed');
-        }
-    } catch (error) {
-        document.querySelector('.error-message').style.display = 'block';
-        console.error('Error:', error);
-    }
+
+        if (!response.ok) throw new Error("Failed");
+
+        responseForm.reset();
+        feedback.textContent = "Your note was sent. I can't wait to read it.";
+        feedback.style.color = "#667f6f";
+      } catch {
+        feedback.textContent = "Couldn't send right now. Try again in a moment.";
+        feedback.style.color = "#a5828f";
+      }
+    });
+
+    buildPathStops();
+    resizeWallpaper();
+    populateExtraFlowers();
+    window.addEventListener("resize", resizeWallpaper);
+    window.addEventListener("resize", populateExtraFlowers);
+    window.addEventListener("load", () => {
+      resizeWallpaper();
+      populateExtraFlowers();
     });
   </script>
 </body>
